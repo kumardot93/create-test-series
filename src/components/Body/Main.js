@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
 import styles from './css/Main.module.css';
-import Sidebar from './Sidebar.js';
-import Result from './Result.js';
+import About from './About.js';
+import TestAdd from './TestAdd.js';
 import { extractKey } from './../../SocketManager.js';
 
 import { connect } from 'react-redux';
 import { updateTestData } from './../../redux/actions/Test.js';
+import { updateTestSeriesData } from './../../redux/actions/TestSeries.js';
 
 //Entry point for the main body
 class Main extends Component {
-	//fetching and saving the test data
+	//fetching and saving the testSeries data
 	state = {
-		enter: 1 //Determines what to render
+		spinner: ''
 	};
 	fetchData = (key) => {
 		//fetches all the test data at once
-		fetch(window.base + '/material/api/test/responseData/' + key + '/', { credentials: window.cred })
+		fetch(window.base + '/material/api/testS/data/' + key + '/', { credentials: window.cred })
 			.then((Response) => Response.json())
-			.then((data) => this.props.updateTestData(data))
+			.then((data) => {
+				this.props.updateTestData(data.testList);
+				this.props.updateTestSeriesData(data.testSeries);
+				console.log('fetched data: ', data);
+			})
 			.catch((error) => alert('Error fetching data: possible reasons unauthorised access aur connection issue '));
 	};
 
@@ -28,44 +33,24 @@ class Main extends Component {
 		this.fetchData(key);
 	};
 
-	enter = (val) => {
-		this.setState({ enter: val });
-	};
-
-	save = (ev) => {
-		//save any update for marks and remarks
-		let data = this.props.questions;
-		data = JSON.stringify(data);
+	save = () => {
+		this.setState({ spinner: 'spinner-border spinner-border-sm' });
 		let form = new FormData();
-		form.append('data', data);
-		fetch(window.base + '/material/api/test/responseData/checkSave/' + this.props.res.pk + '/', {
-			method: 'POST',
+		form.append('data', JSON.stringify([ this.props.TestSeries ]));
+		fetch(window.base + '/material/api/testS/saveData/', {
 			credentials: window.cred,
+			method: 'POST',
 			body: form
-		});
-	};
-
-	screen = () => {
-		//Function to determine what to render
-		let res;
-		switch (this.state.enter) {
-			case 1:
-				res = <Result enter={this.enter} />;
-				break;
-			case 2:
-				res = <Sidebar enter={this.enter} submitted={1} />;
-				break;
-		}
-
-		return res;
+		}).then((Response) => this.setState({ spinner: '' }));
 	};
 
 	render() {
 		return (
-			<div id={styles.main} className="p-1 d-flex pt-2">
-				{this.screen()}
+			<div id={styles.main} className="p-1 d-flex pt-2 pb-0 mb-4">
+				<About />
+				<TestAdd />
 				<button id={styles.save} className="form-control btn btn-secondary" onClick={this.save}>
-					Save
+					Save <span class={'ml-2' + ' ' + this.state.spinner} />
 				</button>
 			</div>
 		);
@@ -74,14 +59,14 @@ class Main extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		questions: state.Test.fields.questions,
-		res: state.Test
+		TestSeries: state.TestSeries
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		updateTestData: (data) => dispatch(updateTestData(data)) //to store the fetched test data
+		updateTestData: (data) => dispatch(updateTestData(data)), //to store the fetched test data
+		updateTestSeriesData: (data) => dispatch(updateTestSeriesData(data)) //to store the fetched data of test series
 	};
 };
 

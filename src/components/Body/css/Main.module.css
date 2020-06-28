@@ -2,24 +2,7 @@
 	height: calc(100vh - 130px);
 	width: 100%;
 	flex-direction: row;
-	/* margin-bottom: 10vh; */
-}
-
-.fullScreen {
-	position: fixed;
-	min-height: calc(100vh - 26px);
-	widows: 100vw;
-	top: 0;
-	background-color: aliceblue;
-}
-
-#timer {
-	position: fixed;
-	bottom: 0;
-	left: 2vw;
-	font-family: 'Orbitron', sans-serif;
-	z-index: 5;
-	max-height: 16px;
+	overflow-y: auto;
 }
 
 #save {
@@ -36,13 +19,6 @@
 		align-items: center;
 	}
 
-	.fullScreen {
-		min-height: calc(100vh - 22px);
-	}
-
-	#timer {
-		font-size: 3vw;
-	}
 	#save {
 		margin-left: none;
 		margin: auto;

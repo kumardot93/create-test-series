@@ -1,0 +1,23 @@
+#testBtnsmain {
+	box-shadow: 0 0 4px black;
+	margin-left: 10px;
+}
+
+.testBtns:hover {
+	background-color: lightgray;
+}
+
+.testBtns:hover i {
+	transform: scale(1.2);
+}
+
+#active {
+	background-color: lightgreen;
+}
+
+@media only screen and (max-width: 900px) {
+	#testBtnsmain {
+		margin-left: 0;
+		margin-bottom: 40px;
+	}
+}

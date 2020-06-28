@@ -1,0 +1,6 @@
+.delTest {
+	cursor: pointer;
+}
+.delTest:hover {
+	transform: scale(1.2);
+}

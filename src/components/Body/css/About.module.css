@@ -1,0 +1,10 @@
+#testSmain {
+	box-shadow: 0 0 4px black;
+	overflow-y: auto;
+}
+
+@media only screen and (max-width: 900px) {
+	#testSmain {
+		overflow-y: visible;
+	}
+}
